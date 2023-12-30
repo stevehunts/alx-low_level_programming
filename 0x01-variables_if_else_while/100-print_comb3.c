@@ -7,22 +7,26 @@
  */
 int main(void)
 {
-	int i = 0;
+	int i, j;
 
-	while (i < 100)
+	i = 0;
+	while (i < 9)
 	{
-		putchar((i / 10) + '0');
-		putchar((i % 10) + '0');
-		if (i != 89)
+		j = i + 1;
+		while (j < 10)
 		{
-			putchar(',');
-			putchar(' ');
+			putchar(i + '0');
+			putchar(j + '0');
+
+			if (!(i == 8 && j == 9))
+			{
+				putchar(',');
+				putchar(' ');
+			}
+
+			j++;
 		}
 		i++;
-		while (i / 10 == i % 10)
-		{
-			i++;
-		}
 	}
 	putchar('\n');
 
