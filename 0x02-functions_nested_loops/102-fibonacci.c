@@ -1,9 +1,7 @@
 #include <stdio.h>
 
 /**
- * main - Prints the first 50 Fibonacci numbers separated by commas
- *        using a loop.
- *
+ * main - Prints the first 50 Fibonacci
  * Return: Always 0.
  */
 int main(void)
@@ -12,18 +10,16 @@ int main(void)
 	int first = 1, second = 2, next;
 	int i;
 
-	printf("%d, %d", first, second);
+	printf("%d", first);
 
-	for (i = 2; i < n; i++)
+	for (i = 1; i < n; i++)
 	{
+		printf(", %d", second);
 		next = first + second;
-		printf(", %d", next);
 		first = second;
 		second = next;
 	}
-
 	printf("\n");
-
 	return (0);
 }
 
