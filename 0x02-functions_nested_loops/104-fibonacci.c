@@ -1,34 +1,30 @@
 #include <stdio.h>
 
 /**
- * main - Prints the first 98 Fibonacci numbers.
+ * main - Entry point
  *
- * Return: Always 0.
+ * Description: Prints the first 98 Fibonacci numbers separated by commas
+ *              without exceeding 4,000,000. Numbers are followed by a newline.
+ *
+ * Return: Always 0 (Success)
  */
 int main(void)
 {
-	unsigned long first = 1, second = 2, next;
-	int count;
+	long int a = 1, b = 2, c;
 
-	/* Print the first two Fibonacci numbers */
-	printf("%lu, %lu", first, second);
+	printf("%ld, %ld", a, b);
 
-	/* Print the rest of the Fibonacci numbers */
-	for (count = 3; count <= 98; ++count)
+	for (int i = 3; i <= 98; ++i)
 	{
-		/* Calculate the next term in the Fibonacci sequence */
-		next = first + second;
+		c = a + b;
+		printf(", %ld", c);
 
-		/* Print comma and space before the number */
-		printf(", %lu", next);
-
-		/* Update 'first' and 'second' for the next iteration */
-		first = second;
-		second = next;
+		a = b;
+		b = c;
 	}
 
-	printf("\n"); /* Print newline at the end */
+	printf("\n");
 
-	return (0);
+	return 0;
 }
 
