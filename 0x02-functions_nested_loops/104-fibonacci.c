@@ -7,18 +7,16 @@
  */
 int main(void)
 {
-	int i;
-	long int first = 1, second = 2, next;
+	long int a = 1, b = 2, c = 0;
 
-	printf("%ld, %ld", first, second);
+	printf("%ld, %ld", a, b);
 
-	for (i = 3; i <= 98; ++i)
+	for (int i = 3; i <= 98; ++i)
 	{
-		next = first + second;
-		printf(", %ld", next);
-
-		first = second;
-		second = next;
+		c = a + b;
+		printf(", %ld", c);
+		a = b;
+		b = c;
 	}
 
 	printf("\n");
