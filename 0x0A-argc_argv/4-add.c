@@ -3,12 +3,12 @@
 #include <ctype.h>
 #include <string.h>
 /**
- * Check num - if a string represents a positive number.
+ * Check_num - check - string there are digit
  * @str: array str
  *
- * Return: Always 0 success
+ * Return: Always 0 (Success)
  */
-int is_positive_number(char *str)
+int check_num(char *str)
 {
 	unsigned int count;
 
