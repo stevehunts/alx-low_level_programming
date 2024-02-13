@@ -50,11 +50,11 @@ int main(int argc, char *argv[])
 
 		else
 		{
-		print("Error\n");
+		printf("Error\n");
 		return (1);
 		}
 		count++;
 	}
-	print("%d\n", sum);
+	printf("%d\n", sum);
 	return (0);
 }
