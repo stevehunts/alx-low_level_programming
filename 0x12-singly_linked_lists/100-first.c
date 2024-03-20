@@ -3,8 +3,8 @@
 void first(void)__attribute__((constructor));
 
 /**
- * premain - A function that executes before main.
- * Use the constructor attribute to run this before main.
+ * first - prints a sentence before the main
+ * function is executed
  */
 void first(void)
 {
