@@ -2,24 +2,54 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-
-#define BUFFER_SIZE 1024
-
-void print_error(const char *msg, const char *filename, int status);
-void close_file(int fd);
+#include <sys/stat.h>
+#include <sys/types.h>
 
 /**
- * main - copies the content of a file to another file.
- * @argc: number of arguments passed to the program
- * @argv: array of arguments
+ * check_stat - Checks the status of file operations and handles errors.
+ * @stat: The status result of a file operation.
+ * @fd: The file descriptor for the close operation, if applicable.
+ * @filename: The file involved in the operation.
+ * @mode: The operation mode ('r', 'w', 'c').
  *
- * Return: Always 0 (Success)
+ * Description: Checks file operation results, prints errors, exits if needed.
+ */
+void check_stat(int stat, int fd, char *filename, char mode)
+{
+	if (stat == -1)
+	{
+		if (mode == 'r')
+		{
+			dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", filename);
+			exit(98);
+		}
+		else if (mode == 'w')
+		{
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", filename);
+			exit(99);
+		}
+		else if (mode == 'c')
+		{
+			dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+			exit(100);
+		}
+	}
+}
+
+/**
+ * main - Copies the content of a file to another file.
+ * @argc: Number of command-line arguments.
+ * @argv: Command-line arguments.
+ *
+ * Return: 0 on success, exits on error with specific code.
+ *
+ * Description: Copies content from one file to another, handles errors.
  */
 int main(int argc, char *argv[])
 {
-	int fd_from, fd_to;
-	ssize_t read_count, write_count;
-	char buffer[BUFFER_SIZE];
+	int src, dest, n_read = 1024, wrote;
+	char buffer[1024];
+	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
 
 	if (argc != 3)
 	{
@@ -27,49 +57,25 @@ int main(int argc, char *argv[])
 		exit(97);
 	}
 
-	fd_from = open(argv[1], O_RDONLY);
-	if (fd_from < 0)
-		print_error("Can't read from file", argv[1], 98);
+	src = open(argv[1], O_RDONLY);
+	check_stat(src, -1, argv[1], 'r');
 
-	fd_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	if (fd_to < 0)
-		print_error("Can't write to", argv[2], 99);
+	dest = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, mode);
+	check_stat(dest, -1, argv[2], 'w');
 
-	while ((read_count = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+	while ((n_read = read(src, buffer, 1024)) > 0)
 	{
-		write_count = write(fd_to, buffer, read_count);
-		if (write_count != read_count)
-			print_error("Can't write to", argv[2], 99);
+		wrote = write(dest, buffer, n_read);
+		if (wrote != n_read)
+		{
+			check_stat(-1, dest, argv[2], 'w');
+		}
 	}
+	check_stat(n_read, src, argv[1], 'r');
 
-	if (read_count < 0)
-		print_error("Can't read from file", argv[1], 98);
-
-	close_file(fd_from);
-	close_file(fd_to);
+	check_stat(close(src), src, NULL, 'c');
+	check_stat(close(dest), dest, NULL, 'c');
 
 	return (0);
-}
-
-/**
- * print_error - prints an error message to standard error and exits.
- * @msg: error message
- * @filename: name of the file that caused the error
- * @status: exit status
- */
-void print_error(const char *msg, const char *filename, int status)
-{
-	dprintf(STDERR_FILENO, "%s %s\n", msg, filename);
-	exit(status);
-}
-
-/**
- * close_file - Closes a file descriptor.
- * @fd: file descriptor to close
- */
-void close_file(int fd)
-{
-	if (close(fd) < 0)
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd), exit(100);
 }
 
